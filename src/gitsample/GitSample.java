@@ -17,7 +17,7 @@ public class GitSample {
      */
     public static void main(String[] args) {
         //second commit
-        aa
+        //new feature commit
     }
     
 }
