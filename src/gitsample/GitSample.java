@@ -18,6 +18,8 @@ public class GitSample {
     public static void main(String[] args) {
         //second commit
         //new feature commit
+        //feature prog add...
+        //feature prog add...
     }
     
 }
