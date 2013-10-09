@@ -20,6 +20,7 @@ public class GitSample {
         //new feature commit
         //feature prog add...
         //feature prog add...
+        //another add for feature branch
     }
     
 }
