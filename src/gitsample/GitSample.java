@@ -7,19 +7,22 @@
 package gitsample;
 
 /**
- *
+ * 
  * @author Josue
  */
 public class GitSample {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        //second commit
-        //new feature commit
-        //feature prog add...
-        //feature prog add...
-    }
-    
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
+		// second commit
+		// new feature commit
+		// feature prog add...
+		// feature prog add...
+
+		// feature in new branch
+	}
+
 }
