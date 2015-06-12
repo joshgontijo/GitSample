@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="lineBean" required="true" type="com.josue.highjsf.component.LineBean" />
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:outputScript name="js/jquery.js" />
+        <h:outputScript name="js/highcharts.js" />
+        <div id="#{cc.id}_highchart" style="min-width: 310px; height: 400px; margin: 0 auto"/>
+        <script type="text/javascript">
+            //<![CDATA[
+            $('##{cc.id}_highchart').highcharts(
+            #{cc.attrs.lineBean.toString()}
+            );
+            //]]>
+        </script>
+    </cc:implementation>
+</html>

@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="interval" type="java.lang.Integer" default="1000" />
+        <cc:attribute name="value" type="java.lang.Integer" required="true" method-signature="java.lang.Integer action()"/>
+        <cc:attribute name="span" type="java.lang.Integer" default="5"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <h:outputScript name="js/jquery.js" />
+        <h:outputScript name="js/highcharts.js" />
+        <div id="#{cc.id}_highchart" style="min-width: 310px; height: 400px; margin: 0 auto"/>
+
+
+        <h:outputText id="hiddenVal" value="#{cc.attrs.value}" />
+        <h:commandLink id="pollingLink">
+            <f:ajax render="hiddenVal" />
+        </h:commandLink>
+
+        <script type="text/javascript">
+            //get variable
+            var yValue = 0;
+            function getY() {
+                var hiddenValElement = '#{cc.clientId}:hiddenVal';
+                yValue = document.getElementById(hiddenValElement).innerHTML;
+                return Number(yValue);
+            }
+
+            //polling
+            var pollingLinkId = '#{cc.clientId}:pollingLink';
+            setInterval(function () {
+                $(document.getElementById(pollingLinkId)).click();
+            }, #{cc.attrs.interval});
+        </script>
+
+
+        <script type="text/javascript">
+            //<![CDATA[
+
+            $(document).ready(function () {
+                Highcharts.setOptions({
+                    global: {
+                        useUTC: false
+                    }
+                });
+                $('##{cc.id}_highchart').highcharts({
+                    chart: {
+                        type: 'spline',
+                        animation: Highcharts.svg, // don't animate in old IE
+                        marginRight: 10,
+                        events: {
+                            load: function () {
+
+                                // set up the updating of the chart each second
+                                var series = this.series[0];
+                                setInterval(function () {
+                                    // Adds delay, so the textbox can update first
+                                    //removing can add more race condition
+                                    //this helps but doesnt prevent from inconsistencies
+                                    setTimeout(function () { 
+                                        var x = (new Date()).getTime(); // current time
+                                        series.addPoint([x, getY()], true, true);
+                                    }, 300);
+
+                                }, #{cc.attrs.interval});
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Live random data'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 150
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        },
+                        plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                                    Highcharts.numberFormat(this.y, 2);
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series: [{
+                            name: 'Random data',
+                            data: (function () {
+                                // generate an array of random data
+                                var data = [],
+                                        time = (new Date()).getTime(),
+                                        i;
+
+                                for (i = -#{cc.attrs.span}; i < 0; i++) {
+                                    data.push({
+                                        x: time,
+                                        y: 0
+                                    });
+                                }
+                                return data;
+                            }())
+                        }]
+                });
+            });
+            //]]>
+        </script>
+    </cc:implementation>
+</html>
